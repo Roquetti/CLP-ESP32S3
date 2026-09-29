@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="96" fill="#10151c"/>
+<rect x="74" y="92" width="364" height="328" rx="38" fill="#202833" stroke="#28c76f" stroke-width="16"/>
+<text x="256" y="230" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="88" fill="#ffffff">CLP</text>
+<text x="256" y="315" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="52" fill="#28c76f">ESP32</text>
+<circle cx="128" cy="366" r="18" fill="#28c76f"/>
+<circle cx="184" cy="366" r="18" fill="#28c76f"/>
+<circle cx="240" cy="366" r="18" fill="#28c76f"/>
+</svg>
