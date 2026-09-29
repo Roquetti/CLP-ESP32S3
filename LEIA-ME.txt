@@ -1,35 +1,18 @@
-CLP ESP32-S3 - Painel Web/PWA
+CLP ESP32-S3 - PWA V2
 
-Arquivos:
-- index.html       Painel principal
-- manifest.json    Configuração PWA
-- sw.js            Service Worker
-- icon.svg         Ícone do aplicativo
+V2 mantém as funções da V1 e acrescenta:
+- Setpoint de temperatura no painel (+/- 0,5 °C)
+- Tópicos preparados: clpesp32/setpoint/set e clpesp32/setpoint/status
+- Gráfico local de temperatura e umidade
+- Registro local dos últimos eventos
+- Service worker V2 para atualização do cache
 
-Configuração MQTT já preparada:
-Broker: c409d301207c4a388c0db1d614c151c5.s1.eu.hivemq.cloud
-WebSocket TLS: porta 8884
-Usuário padrão: PainelCLP
-Senha: NÃO está incluída no arquivo. Digite-a no próprio celular.
+ATENÇÃO:
+O setpoint só controlará o R1 depois que o firmware ESP32 também for atualizado
+para assinar clpesp32/setpoint/set e publicar clpesp32/setpoint/status.
+Até essa atualização, os botões +/- apenas enviam o novo tópico MQTT.
 
-IMPORTANTE
-1. Uma PWA precisa ser servida por HTTPS (ou localhost). Não basta abrir index.html diretamente como file://.
-2. O painel usa MQTT via WebSocket seguro (WSS).
-3. A biblioteca mqtt.js é carregada do CDN unpkg.com, portanto é necessária Internet.
-4. A senha digitada é armazenada no localStorage do navegador desse aparelho.
-5. Para produção mais segura, o ideal é não manter credenciais MQTT permanentes em código cliente/navegador.
-
-Tópicos:
-clpesp32/temperatura
-clpesp32/umidade
-clpesp32/modo/set
-clpesp32/modo/status
-clpesp32/alarme
-clpesp32/rele1..6/set
-clpesp32/rele1..6/status
-clpesp32/entrada1..5/status
-
-Para instalar no celular:
-- Hospede esta pasta em um site HTTPS.
-- Abra o endereço no Chrome/Edge/Safari.
-- Use "Adicionar à tela inicial" / "Instalar aplicativo".
+PUBLICAÇÃO NO GITHUB:
+Substitua index.html, manifest.json, sw.js e icon.svg no repositório CLP-ESP32S3.
+Pode também substituir este LEIA-ME.txt.
+O GitHub Pages atualizará o mesmo endereço.

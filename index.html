@@ -1,231 +1,107 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#10151c">
-  <title>CLP ESP32-S3</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.svg">
-  <style>
-    :root { color-scheme: dark; font-family: system-ui, -apple-system, Segoe UI, sans-serif; }
-    * { box-sizing: border-box; }
-    body { margin:0; background:#0b0f14; color:#f4f7fa; }
-    main { max-width:680px; margin:auto; padding:16px 14px 34px; }
-    header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
-    h1 { font-size:1.35rem; margin:0; }
-    .status { display:flex; align-items:center; gap:7px; font-weight:700; font-size:.85rem; }
-    .dot { width:12px; height:12px; border-radius:50%; background:#707780; display:inline-block; }
-    .online .dot, .on .dot { background:#28c76f; box-shadow:0 0 12px #28c76f; }
-    .offline .dot { background:#e34b4b; }
-    .card { background:#151b23; border:1px solid #29313b; border-radius:16px; padding:15px; margin:12px 0; box-shadow:0 7px 24px #0005; }
-    .readings, .grid2, .grid3, .grid5 { display:grid; gap:10px; }
-    .readings { grid-template-columns:1fr 1fr; }
-    .grid2 { grid-template-columns:1fr 1fr; }
-    .grid3 { grid-template-columns:repeat(3,1fr); }
-    .grid5 { grid-template-columns:repeat(5,1fr); }
-    .reading { text-align:center; padding:13px 5px; background:#0e1319; border-radius:12px; }
-    .reading .label, .section-title { color:#aeb8c4; font-size:.78rem; letter-spacing:.08em; font-weight:800; }
-    .value { font-size:1.65rem; font-weight:800; margin-top:5px; }
-    button { border:1px solid #3a4654; background:#202833; color:#fff; border-radius:12px; padding:13px 8px; font-weight:800; font-size:.95rem; touch-action:manipulation; }
-    button:active { transform:scale(.98); }
-    button.active, button.relay-on { background:#176d42; border-color:#28c76f; }
-    button.relay-off { background:#502126; border-color:#b8444c; }
-    button:disabled { opacity:.48; }
-    .relay-state { display:block; font-size:.72rem; margin-top:4px; opacity:.8; }
-    .input { text-align:center; background:#0e1319; padding:12px 3px; border-radius:12px; font-weight:800; font-size:.8rem; }
-    .input .dot { display:block; margin:0 auto 7px; }
-    .alarm { text-align:center; font-size:1.05rem; font-weight:900; padding:13px; border-radius:12px; background:#163b2a; }
-    .alarm.bad { background:#69262b; }
-    .small { color:#9da8b4; font-size:.78rem; line-height:1.45; }
-    dialog { width:min(92vw,430px); border:1px solid #3a4654; border-radius:16px; background:#151b23; color:#fff; padding:20px; }
-    dialog::backdrop { background:#000b; }
-    label { display:block; margin:11px 0 5px; font-size:.85rem; }
-    input { width:100%; padding:12px; border-radius:10px; border:1px solid #3a4654; background:#0e1319; color:#fff; font-size:1rem; }
-    .actions { display:flex; gap:9px; margin-top:16px; }
-    .actions button { flex:1; }
-    #msg { min-height:1.2em; color:#ffb65c; margin-top:9px; font-size:.82rem; }
-    @media(max-width:390px){ .grid3{grid-template-columns:repeat(2,1fr)} .grid5{grid-template-columns:repeat(5,1fr);gap:5px} }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10151c">
+<title>CLP ESP32-S3 V2</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+*{box-sizing:border-box} body{margin:0;background:#0b0f14;color:#f4f7fa}
+main{max-width:720px;margin:auto;padding:15px 13px 35px}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+h1{font-size:1.3rem;margin:0}.status{display:flex;align-items:center;gap:7px;font-weight:800;font-size:.82rem}
+.dot{width:12px;height:12px;border-radius:50%;background:#737b86;display:inline-block}
+.online .dot,.on .dot{background:#28c76f;box-shadow:0 0 12px #28c76f}.offline .dot{background:#e34b4b}
+.card{background:#151b23;border:1px solid #29313b;border-radius:16px;padding:15px;margin:11px 0}
+.title{font-size:.76rem;color:#adb8c5;letter-spacing:.09em;font-weight:900;margin-bottom:12px}
+.readings,.grid2,.grid3,.grid5{display:grid;gap:10px}.readings,.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:repeat(3,1fr)}.grid5{grid-template-columns:repeat(5,1fr)}
+.reading{text-align:center;background:#0e1319;border-radius:12px;padding:13px 5px}.label{font-size:.72rem;color:#aeb8c4;font-weight:800;letter-spacing:.08em}.value{font-size:1.6rem;font-weight:900;margin-top:4px}
+button{border:1px solid #3a4654;background:#202833;color:#fff;border-radius:12px;padding:13px 8px;font-weight:900;font-size:.94rem;touch-action:manipulation}button:active{transform:scale(.98)}
+button.active,button.relay-on{background:#176d42;border-color:#28c76f}button.relay-off{background:#502126;border-color:#c1444e}
+.relay-state{display:block;font-size:.7rem;margin-top:4px}.input{text-align:center;background:#0e1319;padding:11px 2px;border-radius:12px;font-weight:800;font-size:.78rem}.input .dot{display:block;margin:0 auto 7px}
+.setpoint{display:flex;align-items:center;justify-content:center;gap:13px}.setpoint button{font-size:1.35rem;width:60px}.setvalue{min-width:125px;text-align:center;font-size:1.7rem;font-weight:900}
+.hint,.small{color:#9da8b4;font-size:.76rem;line-height:1.45}.alarm{text-align:center;font-weight:900;padding:13px;border-radius:12px;background:#163b2a}.alarm.bad{background:#69262b}
+canvas{width:100%;height:220px;background:#0e1319;border-radius:12px}
+.log{max-height:180px;overflow:auto;background:#0e1319;border-radius:12px;padding:10px;font-family:ui-monospace,monospace;font-size:.72rem}.log div{padding:4px 0;border-bottom:1px solid #222b35}
+dialog{width:min(92vw,430px);border:1px solid #3a4654;border-radius:16px;background:#151b23;color:#fff;padding:20px}dialog::backdrop{background:#000b}
+label{display:block;margin:10px 0 5px;font-size:.84rem}input{width:100%;padding:12px;border-radius:10px;border:1px solid #3a4654;background:#0e1319;color:#fff}.actions{display:flex;gap:9px;margin-top:15px}.actions button{flex:1}
+@media(max-width:390px){.grid3{grid-template-columns:repeat(2,1fr)}.grid5{gap:5px}}
+</style>
 </head>
-<body>
-<main>
-  <header>
-    <h1>CLP ESP32-S3</h1>
-    <div id="mqttStatus" class="status offline"><span class="dot"></span><span>MQTT OFFLINE</span></div>
-  </header>
+<body><main>
+<header><h1>CLP ESP32-S3 <small>V2</small></h1><div id="mqttStatus" class="status offline"><span class="dot"></span><span>MQTT OFFLINE</span></div></header>
 
-  <section class="card">
-    <div class="readings">
-      <div class="reading"><div class="label">TEMPERATURA</div><div class="value"><span id="temp">--.-</span> °C</div></div>
-      <div class="reading"><div class="label">UMIDADE</div><div class="value"><span id="hum">--.-</span> %</div></div>
-    </div>
-  </section>
+<section class="card"><div class="readings">
+<div class="reading"><div class="label">TEMPERATURA</div><div class="value"><span id="temp">--.-</span> °C</div></div>
+<div class="reading"><div class="label">UMIDADE</div><div class="value"><span id="hum">--.-</span> %</div></div>
+</div></section>
 
-  <section class="card">
-    <div class="section-title">MODO DE OPERAÇÃO</div><br>
-    <div class="grid2">
-      <button id="manual" onclick="setMode('MANUAL')">MANUAL</button>
-      <button id="auto" onclick="setMode('AUTO')">AUTO</button>
-    </div>
-  </section>
+<section class="card"><div class="title">MODO DE OPERAÇÃO</div><div class="grid2">
+<button id="manual" onclick="setMode('MANUAL')">MANUAL</button><button id="auto" onclick="setMode('AUTO')">AUTO</button>
+</div></section>
 
-  <section class="card">
-    <div class="section-title">SAÍDAS</div><br>
-    <div id="relays" class="grid3"></div>
-    <p class="small">No modo AUTO, o R1 é comandado automaticamente pela temperatura.</p>
-  </section>
+<section class="card"><div class="title">SETPOINT DE TEMPERATURA</div>
+<div class="setpoint"><button onclick="changeSetpoint(-0.5)">−</button><div class="setvalue"><span id="setpoint">30.0</span> °C</div><button onclick="changeSetpoint(0.5)">+</button></div>
+<p class="hint">V2 preparada para enviar <b>clpesp32/setpoint/set</b>. Para o ESP32 obedecer ao novo valor, o firmware também precisa receber essa função.</p>
+</section>
 
-  <section class="card">
-    <div class="section-title">ENTRADAS</div><br>
-    <div id="inputs" class="grid5"></div>
-  </section>
+<section class="card"><div class="title">SAÍDAS</div><div id="relays" class="grid3"></div><p class="small">No modo AUTO, R1 permanece reservado ao controle automático.</p></section>
+<section class="card"><div class="title">ENTRADAS</div><div id="inputs" class="grid5"></div></section>
 
-  <section class="card">
-    <div class="section-title">ALARME</div><br>
-    <div id="alarm" class="alarm">AGUARDANDO...</div>
-  </section>
+<section class="card"><div class="title">GRÁFICO — ÚLTIMAS LEITURAS</div><canvas id="chart" width="640" height="220"></canvas><p class="small">Temperatura = linha contínua; umidade = linha tracejada. Histórico local da sessão.</p></section>
 
-  <section class="card">
-    <button onclick="openLogin()">Configurar conexão MQTT</button>
-    <p class="small">A senha fica armazenada somente neste navegador/aparelho. Use a credencial exclusiva <b>PainelCLP</b>.</p>
-  </section>
+<section class="card"><div class="title">ALARME</div><div id="alarm" class="alarm">AGUARDANDO...</div></section>
+<section class="card"><div class="title">EVENTOS</div><div id="log" class="log"><div>Painel iniciado.</div></div></section>
+<section class="card"><button onclick="openLogin()">Configurar conexão MQTT</button><p class="small">A senha é guardada somente neste navegador/aparelho.</p></section>
 </main>
 
-<dialog id="loginDialog">
-  <form method="dialog" onsubmit="saveLogin(event)">
-    <h2>Conexão HiveMQ</h2>
-    <label>Broker</label>
-    <input id="host" required value="c409d301207c4a388c0db1d614c151c5.s1.eu.hivemq.cloud">
-    <label>Porta WebSocket TLS</label>
-    <input id="port" required type="number" value="8884">
-    <label>Usuário MQTT</label>
-    <input id="user" required value="PainelCLP" autocomplete="username">
-    <label>Senha MQTT</label>
-    <input id="pass" required type="password" autocomplete="current-password">
-    <div id="msg"></div>
-    <div class="actions">
-      <button type="button" onclick="document.getElementById('loginDialog').close()">Cancelar</button>
-      <button type="submit">Salvar e conectar</button>
-    </div>
-  </form>
-</dialog>
+<dialog id="loginDialog"><form method="dialog" onsubmit="saveLogin(event)">
+<h2>Conexão HiveMQ</h2>
+<label>Broker</label><input id="host" required value="c409d301207c4a388c0db1d614c151c5.s1.eu.hivemq.cloud">
+<label>Porta WebSocket TLS</label><input id="port" type="number" required value="8884">
+<label>Usuário MQTT</label><input id="user" required value="PainelCLP" autocomplete="username">
+<label>Senha MQTT</label><input id="pass" required type="password" autocomplete="current-password">
+<div class="actions"><button type="button" onclick="loginDialog.close()">Cancelar</button><button type="submit">Salvar e conectar</button></div>
+</form></dialog>
 
 <script src="https://unpkg.com/mqtt@5.10.3/dist/mqtt.min.js"></script>
 <script>
-const BASE='clpesp32';
-let client=null, connected=false, mode='';
-
+const BASE='clpesp32'; let client=null,connected=false,mode='',sp=30.0;
+let temps=[], hums=[];
 const relayBox=document.getElementById('relays');
-for(let i=1;i<=6;i++){
-  const b=document.createElement('button');
-  b.id=`r${i}`; b.className='relay-off'; b.dataset.state='OFF';
-  b.innerHTML=`R${i}<span class="relay-state">OFF</span>`;
-  b.onclick=()=>toggleRelay(i);
-  relayBox.appendChild(b);
-}
+for(let i=1;i<=6;i++){let b=document.createElement('button');b.id='r'+i;b.className='relay-off';b.dataset.state='OFF';b.innerHTML=`R${i}<span class="relay-state">OFF</span>`;b.onclick=()=>toggleRelay(i);relayBox.appendChild(b)}
 const inputBox=document.getElementById('inputs');
-for(let i=1;i<=5;i++){
-  const d=document.createElement('div'); d.id=`e${i}`; d.className='input';
-  d.innerHTML=`<span class="dot"></span>E${i}<br><small>OFF</small>`;
-  inputBox.appendChild(d);
+for(let i=1;i<=5;i++){let d=document.createElement('div');d.id='e'+i;d.className='input';d.innerHTML=`<span class="dot"></span>E${i}<br><small>OFF</small>`;inputBox.appendChild(d)}
+function cred(){return{host:localStorage.getItem('mqttHost')||'c409d301207c4a388c0db1d614c151c5.s1.eu.hivemq.cloud',port:localStorage.getItem('mqttPort')||'8884',user:localStorage.getItem('mqttUser')||'PainelCLP',pass:localStorage.getItem('mqttPass')||''}}
+function openLogin(){let c=cred();host.value=c.host;port.value=c.port;user.value=c.user;pass.value=c.pass;loginDialog.showModal()}
+function saveLogin(e){e.preventDefault();localStorage.setItem('mqttHost',host.value.trim());localStorage.setItem('mqttPort',port.value.trim());localStorage.setItem('mqttUser',user.value.trim());localStorage.setItem('mqttPass',pass.value);loginDialog.close();connectMQTT()}
+function status(ok,t){connected=ok;let e=mqttStatus;e.className='status '+(ok?'online':'offline');e.lastElementChild.textContent=t}
+function addLog(t){let d=document.createElement('div');d.textContent=new Date().toLocaleTimeString()+' — '+t;log.prepend(d);while(log.children.length>30)log.lastChild.remove()}
+function connectMQTT(){let c=cred();if(!c.pass){openLogin();return}if(client)try{client.end(true)}catch(e){};status(false,'CONECTANDO...');
+client=mqtt.connect(`wss://${c.host}:${c.port}/mqtt`,{username:c.user,password:c.pass,clientId:'PainelCLP-V2-'+Math.random().toString(16).slice(2,10),clean:true,reconnectPeriod:3000,connectTimeout:10000,keepalive:30});
+client.on('connect',()=>{status(true,'MQTT ONLINE');addLog('MQTT conectado');client.subscribe(`${BASE}/#`)});
+client.on('reconnect',()=>status(false,'RECONECTANDO...'));client.on('close',()=>status(false,'MQTT OFFLINE'));client.on('error',()=>status(false,'ERRO MQTT'));client.on('message',(t,p)=>handle(t,p.toString().trim()))}
+function pub(t,m){if(!client||!connected){alert('MQTT não conectado.');return}client.publish(t,m,{qos:0,retain:false})}
+function setMode(m){pub(`${BASE}/modo/set`,m)}
+function toggleRelay(n){if(n===1&&mode==='AUTO'){alert('R1 está em controle automático.');return}let b=document.getElementById('r'+n);pub(`${BASE}/rele${n}/set`,b.dataset.state==='ON'?'OFF':'ON')}
+function changeSetpoint(delta){sp=Math.max(5,Math.min(80,sp+delta));setpoint.textContent=sp.toFixed(1);pub(`${BASE}/setpoint/set`,sp.toFixed(1));addLog('Setpoint enviado: '+sp.toFixed(1)+' °C')}
+function handle(t,v){
+if(t===`${BASE}/temperatura`){temp.textContent=num(v);pushData(temps,Number(v));draw()}
+else if(t===`${BASE}/umidade`){hum.textContent=num(v);pushData(hums,Number(v));draw()}
+else if(t===`${BASE}/modo/status`){mode=v.toUpperCase();manual.classList.toggle('active',mode==='MANUAL');auto.classList.toggle('active',mode==='AUTO')}
+else if(t===`${BASE}/setpoint/status`){let n=Number(v);if(Number.isFinite(n)){sp=n;setpoint.textContent=n.toFixed(1)}}
+else if(t===`${BASE}/alarme`){let normal=v.toUpperCase()==='NORMAL';alarm.textContent=v.replaceAll('_',' ');alarm.classList.toggle('bad',!normal)}
+let r=t.match(/^clpesp32\/rele([1-6])\/status$/);if(r){let b=document.getElementById('r'+r[1]),on=v.toUpperCase()==='ON';if(b.dataset.state!==(on?'ON':'OFF'))addLog(`R${r[1]} ${on?'ON':'OFF'}`);b.dataset.state=on?'ON':'OFF';b.className=on?'relay-on':'relay-off';b.querySelector('.relay-state').textContent=on?'ON':'OFF'}
+let i=t.match(/^clpesp32\/entrada([1-5])\/status$/);if(i){let e=document.getElementById('e'+i[1]),on=v.toUpperCase()==='ON';e.classList.toggle('on',on);e.querySelector('small').textContent=on?'ON':'OFF'}
 }
-
-function credentials(){
-  return {
-    host:localStorage.getItem('mqttHost')||'c409d301207c4a388c0db1d614c151c5.s1.eu.hivemq.cloud',
-    port:localStorage.getItem('mqttPort')||'8884',
-    user:localStorage.getItem('mqttUser')||'PainelCLP',
-    pass:localStorage.getItem('mqttPass')||''
-  };
-}
-function openLogin(){
-  const c=credentials();
-  host.value=c.host; port.value=c.port; user.value=c.user; pass.value=c.pass;
-  msg.textContent='';
-  loginDialog.showModal();
-}
-function saveLogin(e){
-  e.preventDefault();
-  localStorage.setItem('mqttHost',host.value.trim());
-  localStorage.setItem('mqttPort',port.value.trim());
-  localStorage.setItem('mqttUser',user.value.trim());
-  localStorage.setItem('mqttPass',pass.value);
-  loginDialog.close();
-  connectMQTT();
-}
-function setStatus(ok, text){
-  connected=ok;
-  const el=document.getElementById('mqttStatus');
-  el.className='status '+(ok?'online':'offline');
-  el.querySelector('span:last-child').textContent=text;
-}
-function connectMQTT(){
-  const c=credentials();
-  if(!c.pass){ openLogin(); return; }
-  if(client){ try{client.end(true)}catch(e){} }
-  setStatus(false,'CONECTANDO...');
-  const url=`wss://${c.host}:${c.port}/mqtt`;
-  client=mqtt.connect(url,{
-    username:c.user, password:c.pass,
-    clientId:'PainelCLP-'+Math.random().toString(16).slice(2,10),
-    clean:true, reconnectPeriod:3000, connectTimeout:10000,
-    keepalive:30
-  });
-  client.on('connect',()=>{
-    setStatus(true,'MQTT ONLINE');
-    client.subscribe(`${BASE}/#`,{qos:0},err=>{
-      if(err) console.error(err);
-    });
-  });
-  client.on('reconnect',()=>setStatus(false,'RECONECTANDO...'));
-  client.on('close',()=>setStatus(false,'MQTT OFFLINE'));
-  client.on('offline',()=>setStatus(false,'MQTT OFFLINE'));
-  client.on('error',(err)=>{ console.error(err); setStatus(false,'ERRO MQTT'); });
-  client.on('message',(topic,payload)=>handleMessage(topic,payload.toString().trim()));
-}
-function publish(topic,message){
-  if(!client||!connected){ alert('MQTT não está conectado.'); return; }
-  client.publish(topic,message,{qos:0,retain:false});
-}
-function setMode(m){ publish(`${BASE}/modo/set`,m); }
-function toggleRelay(n){
-  if(n===1 && mode==='AUTO'){ alert('R1 está sob controle automático. Mude para MANUAL para comandá-lo pelo painel.'); return; }
-  const b=document.getElementById(`r${n}`);
-  const next=b.dataset.state==='ON'?'OFF':'ON';
-  publish(`${BASE}/rele${n}/set`,next);
-}
-function handleMessage(topic,v){
-  if(topic===`${BASE}/temperatura`) document.getElementById('temp').textContent=num(v);
-  else if(topic===`${BASE}/umidade`) document.getElementById('hum').textContent=num(v);
-  else if(topic===`${BASE}/modo/status`){
-    mode=v.toUpperCase();
-    document.getElementById('manual').classList.toggle('active',mode==='MANUAL');
-    document.getElementById('auto').classList.toggle('active',mode==='AUTO');
-  }
-  else if(topic===`${BASE}/alarme`){
-    const a=document.getElementById('alarm');
-    const normal=v.toUpperCase()==='NORMAL';
-    a.textContent=v.replaceAll('_',' ');
-    a.classList.toggle('bad',!normal);
-  }
-  const rm=topic.match(/^clpesp32\/rele([1-6])\/status$/);
-  if(rm){
-    const b=document.getElementById(`r${rm[1]}`), on=v.toUpperCase()==='ON';
-    b.dataset.state=on?'ON':'OFF'; b.className=on?'relay-on':'relay-off';
-    b.querySelector('.relay-state').textContent=on?'ON':'OFF';
-  }
-  const im=topic.match(/^clpesp32\/entrada([1-5])\/status$/);
-  if(im){
-    const e=document.getElementById(`e${im[1]}`), on=v.toUpperCase()==='ON';
-    e.classList.toggle('on',on); e.querySelector('small').textContent=on?'ON':'OFF';
-  }
-}
-function num(v){ const n=Number(v); return Number.isFinite(n)?n.toFixed(1):v; }
-
-if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
-window.addEventListener('load',()=>{ if(credentials().pass) connectMQTT(); else openLogin(); });
-</script>
-</body>
-</html>
+function num(v){let n=Number(v);return Number.isFinite(n)?n.toFixed(1):v}
+function pushData(a,v){if(Number.isFinite(v)){a.push(v);if(a.length>60)a.shift()}}
+function draw(){let c=document.getElementById('chart'),x=c.getContext('2d'),w=c.width,h=c.height;x.clearRect(0,0,w,h);x.strokeStyle='#303944';x.lineWidth=1;for(let y=30;y<h;y+=40){x.beginPath();x.moveTo(0,y);x.lineTo(w,y);x.stroke()}
+function line(a,min,max,dash){if(a.length<2)return;x.setLineDash(dash?[7,6]:[]);x.strokeStyle=dash?'#66b8ff':'#28c76f';x.lineWidth=3;x.beginPath();a.forEach((v,i)=>{let px=i/(Math.max(59,a.length-1))*(w-10)+5,py=h-10-(v-min)/(max-min)*(h-20);py=Math.max(5,Math.min(h-5,py));i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke();x.setLineDash([])}
+line(temps,0,50,false);line(hums,0,100,true)}
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+window.addEventListener('load',()=>{let saved=Number(localStorage.getItem('setpoint'));if(Number.isFinite(saved)&&saved>0){sp=saved;setpoint.textContent=sp.toFixed(1)}if(cred().pass)connectMQTT();else openLogin()});
+</script></body></html>

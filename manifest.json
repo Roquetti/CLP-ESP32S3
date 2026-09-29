@@ -1,18 +1,5 @@
 {
-  "name": "CLP ESP32-S3",
-  "short_name": "CLP ESP32",
-  "description": "Painel MQTT para CLP ESP32-S3",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "background_color": "#0b0f14",
-  "theme_color": "#10151c",
-  "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ]
+"name":"CLP ESP32-S3 V2","short_name":"CLP ESP32","start_url":"./","scope":"./","display":"standalone",
+"background_color":"#0b0f14","theme_color":"#10151c",
+"icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
 }
