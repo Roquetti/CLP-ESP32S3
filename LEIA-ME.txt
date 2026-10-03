@@ -16,3 +16,12 @@ PUBLICAÇÃO NO GITHUB:
 Substitua index.html, manifest.json, sw.js e icon.svg no repositório CLP-ESP32S3.
 Pode também substituir este LEIA-ME.txt.
 O GitHub Pages atualizará o mesmo endereço.
+
+
+MIGRAÇÃO PARA EMQX CLOUD:
+- Broker WebSocket TLS: z8126f2f.ala.eu-central-1.emqxsl.com
+- Porta WSS: 8084
+- Usuário padrão: CLPesp32S3
+- A senha NÃO está gravada no arquivo; informe no painel.
+- Mantidos os tópicos clpesp32/... usados pelo firmware.
+- Painel ajustado para 3 entradas: E1, E2 e E3.
